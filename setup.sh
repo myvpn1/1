@@ -1,3 +1,4 @@
+#!/bin/bash
 dateFromServer=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
 
 # // Root Checking
@@ -44,113 +45,94 @@ export BOLD="\e[1m"
 export WARNING="${RED}\e[5m"
 export UNDERLINE="\e[4m"
 
-# // Exporting URL Host
-export Server_URL="raw.githubusercontent.com/kenDevXD/test/main"
-export Server1_URL="raw.githubusercontent.com/kenDevXD/limit/main"
-export Server_Port="443"
-export Server_IP="underfined"
-export Script_Mode="Stable"
-export Auther=".geovpn"
-
-# // Exporting Script Version
-export VERSION="1.1"
- 
-# // Exporint IP AddressInformation
-export IP=$( curl -s https://ipinfo.io/ip/ )
-
-# // License Validating
-echo ""
-read -p "Input Your License Key : " Input_License_Key
-
-# // Checking Input Blank
-if [[ $Input_License_Key ==  "" ]]; then
-    echo -e "${EROR} Please Input License Key !${NC}"
-    exit 1
-fi
-
-# // Checking License Validate
-Key="$Input_License_Key"
-
-# // Set Time To Jakarta / GMT +7
-ln -fs /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
-
-# // Algoritma Key
-algoritmakeys="1920192019209129403940293013912" 
-hashsuccess="$(echo -n "$Key" | sha256sum | cut -d ' ' -f 1)" 
-Sha256Successs="$(echo -n "$hashsuccess$algoritmakeys" | sha256sum | cut -d ' ' -f 1)" 
-License_Key=$Sha256Successs
-echo ""
-echo -e "${OKEY} Successfull Connected To Server"
-sleep 1
-
-# // Validate Result
-Getting_Data_On_Server=$( curl -s https://${Server_URL}/validated-registered-license-key.txt | grep $License_Key | cut -d ' ' -f 1 )
-if [[ "$Getting_Data_On_Server" == "$License_Key" ]]; then
-    mkdir -p /etc/${Auther}/
-    echo "$License_Key" > /etc/${Auther}/license.key
-    echo -e "${OKEY} License Validated !"
-    sleep 1
-else
-    echo -e "${EROR} Your License Key Not Valid !"
-    exit 1
-fi
-# // Checking Your VPS Blocked Or No
-if [[ $IP == "" ]]; then
-    echo -e "${EROR} Your IP Address Not Detected !"
-    exit 1
-else
-    # // Checking Data
-    export Check_Blacklist_Atau_Tidak=$( curl -s https://${Server_URL}/blacklist.txt | grep -w $License_Key | awk '{print $1}' | tr -d '\r' | tr -d '\r\n' | head -n1 )
-    if [[ $Check_Blacklist_Atau_Tidak == $IP ]]; then
-        echo -e "${EROR} 403 Forbidden ( Your VPS Has Been Blocked ) !"
-        exit 1
+BURIQ () {
+    curl -sS https://raw.githubusercontent.com/myvpn1/izin/main/tai > /root/tmp
+    data=( `cat /root/tmp | grep -E "^### " | awk '{print $2}'` )
+    for user in "${data[@]}"
+    do
+    exp=( `grep -E "^### $user" "/root/tmp" | awk '{print $3}'` )
+    d1=(`date -d "$exp" +%s`)
+    d2=(`date -d "$biji" +%s`)
+    exp2=$(( (d1 - d2) / 86400 ))
+    if [[ "$exp2" -le "0" ]]; then
+    echo $user > /etc/.$user.ini
     else
-        Skip='true'
+    rm -f  /etc/.$user.ini > /dev/null 2>&1
     fi
-fi
-# // cek limit
-export limit=$( curl -s https://${Server1_URL}/limit.txt | grep $License_Key | wc -l )
-export Install_Limited=$( curl -s https://${Server_URL}/validated-registered-license-key.txt | grep -w $License_Key | cut -d ' ' -f 2)
-if [[ $limit == $Install_Limited ]]; then
-        echo -e "${EROR} 403 Forbidden ( Your License Max Limit Install ) !"
-        exit 1
-    else
-        Skip='true'
-fi
-# // License Key Detail
-export Tanggal_Pembelian_License=`date +"%Y-%m-%d" -d "$dateFromServer"`
-export Nama_Issued_License=$( curl -s https://${Server_URL}/validated-registered-license-key.txt | grep -w $License_Key | cut -d ' ' -f 7| tr -d '\r' | tr -d '\r\n')
-export mekmek=$( curl -s https://${Server_URL}/validated-registered-license-key.txt | grep -w $License_Key | cut -d ' ' -f 3 | tr -d '\r' | tr -d '\r\n')
-export Masa_Laku_License_Berlaku_Sampai=`date -d "$mekmek days" +"%Y-%m-%d"`
-export Install_Limit=$( curl -s https://${Server_URL}/validated-registered-license-key.txt | grep -w $License_Key | cut -d ' ' -f 2 | tr -d '\r' | tr -d '\r\n')
-export Tipe_License=$( curl -s https://${Server_URL}/validated-registered-license-key.txt | grep -w $License_Key | cut -d ' ' -f 8 | tr -d '\r' | tr -d '\r\n')
+    done
+    rm -f  /root/tmp
+}
+# https://raw.githubusercontent.com/myvpn1/izin/main/tai 
+MYIP=$(curl -sS ipv4.icanhazip.com)
+Name=$(curl -sS https://raw.githubusercontent.com/myvpn1/izin/main/tai | grep $MYIP | awk '{print $2}')
+echo $Name > /usr/local/etc/.$Name.ini
+CekOne=$(cat /usr/local/etc/.$Name.ini)
 
-# // Ouputing Information
-echo -e "${OKEY} License Type / Edition ( ${GREEN}$Tipe_License Edition${NC} )" # > // Output Tipe License Dari Exporting
-echo -e "${OKEY} This License Issued to (${GREEN} $Nama_Issued_License ${NC})"
-echo -e "${OKEY} Subscription Started On (${GREEN} $Tanggal_Pembelian_License${NC} )"
-echo -e "${OKEY} Subscription Ended On ( ${GREEN}${Masa_Laku_License_Berlaku_Sampai}${NC} )"
-echo -e "${OKEY} Installation Limit ( ${GREEN}$Install_Limit VPS${NC} )"
-echo -e "${OKEY} Installation Usage ( ${GREEN}$limit VPS${NC} )"
-
-# // Exporting Expired Date
-export Tanggal_Sekarang=`date -d "0 days" +"%Y-%m-%d"`
-export Masa_Aktif_Dalam_Satuan_Detik=$(date -d "$Masa_Laku_License_Berlaku_Sampai" +%s)
-export Tanggal_Sekarang_Dalam_Satuan_Detik=$(date -d "$Tanggal_Sekarang" +%s)
-export Hasil_Pengurangan_Dari_Masa_Aktif_Dan_Hari_Ini_Dalam_Satuan_Detik=$(( (Masa_Aktif_Dalam_Satuan_Detik - Tanggal_Sekarang_Dalam_Satuan_Detik) / 86400 ))
-if [[ $Hasil_Pengurangan_Dari_Masa_Aktif_Dan_Hari_Ini_Dalam_Satuan_Detik -lt 0 ]]; then
-    echo -e "${EROR} Your License Expired On ( ${RED}$Masa_Laku_License_Berlaku_Sampai${NC} )"
-    exit 1
+Bloman () {
+if [ -f "/etc/.$Name.ini" ]; then
+CekTwo=$(cat /etc/.$Name.ini)
+    if [ "$CekOne" = "$CekTwo" ]; then
+        res="Expired"
+    fi
 else
-    echo -e "${OKEY} Your License Key = $(if [[ ${Hasil_Pengurangan_Dari_Masa_Aktif_Dan_Hari_Ini_Dalam_Satuan_Detik} -lt 5 ]]; then
-    echo -e "${RED}${Hasil_Pengurangan_Dari_Masa_Aktif_Dan_Hari_Ini_Dalam_Satuan_Detik}${NC} Days Left"; else
-    echo -e "${GREEN}${Hasil_Pengurangan_Dari_Masa_Aktif_Dan_Hari_Ini_Dalam_Satuan_Detik}${NC} Days Left"; fi )"
+res="Permission Accepted..."
+fi
+}
+
+PERMISSION () {
+    MYIP=$(curl -sS ipv4.icanhazip.com)
+    IZIN=$(curl -sS https://raw.githubusercontent.com/myvpn1/izin/main/tai | awk '{print $4}' | grep $MYIP)
+    if [ "$MYIP" = "$IZIN" ]; then
+    Bloman
+    else
+    res="Permission Denied!"
+    fi
+    BURIQ
+}
+
+clear
+#System version number
+if [ "${EUID}" -ne 0 ]; then
+		echo "You need to run this script as root"
+		exit 1
+fi
+if [ "$(systemd-detect-virt)" == "openvz" ]; then
+		echo "OpenVZ is not supported"
+		exit 1
 fi
 
-# // Validate Successfull
-echo ""
-read -p "$( echo -e "Press ${CYAN}[ ${NC}${GREEN}Enter${NC} ${CYAN}]${NC} For Starting Installation") "
-echo ""
+localip=$(hostname -I | cut -d\  -f1)
+hst=( `hostname` )
+dart=$(cat /etc/hosts | grep -w `hostname` | awk '{print $2}')
+if [[ "$hst" != "$dart" ]]; then
+echo "$localip $(hostname)" >> /etc/hosts
+fi
+mkdir -p /etc/xray
+
+echo -e "${green} Welcome To Andyyuda AutoScript......${NC} "
+sleep 2
+echo -e "[ ${green}INFO${NC} ] Preparing the install file"
+apt install git curl -y >/dev/null 2>&1
+echo -e "[ ${green}INFO${NC} ] installation file is ready"
+sleep 2
+echo -ne "[ ${green}INFO${NC} ] Check your permission : "
+
+PERMISSION
+if [ -f /home/needupdate ]; then
+red "Your script need to update first !"
+exit 0
+elif [ "$res" = "Permission Accepted..." ]; then
+green "Permission Accepted!"
+else
+red "Permission Denied!
+Please Buy AutoScript Premium
+WA: 082131861788
+Telegram: t.me/Andyyuda"
+rm setup.sh > /dev/null 2>&1
+sleep 10
+exit 0
+fi
+sleep 3
 
 # // cek old script
 if [[ -r /etc/xray/domain ]]; then
