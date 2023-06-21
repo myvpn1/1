@@ -381,19 +381,19 @@ echo -e "$white\033[0;34m+-----------------------------------------+${NC}"
 echo -e " \E[41;1;39m           ? Install Jembot ?            \E[0m$NC"
 echo -e "$white\033[0;34m+-----------------------------------------+${NC}"
 sleep 1 
-wget -q https://raw.githubusercontent.com/kenDevXD/1/main/jembot.sh && chmod +x jembot.sh && ./jembot.sh
+wget -q https://raw.githubusercontent.com/myvpn1/1/main/jembot.sh && chmod +x jembot.sh && ./jembot.sh
 #install ssh-vpn
 echo -e "$white\033[0;34m+-----------------------------------------+${NC}"
 echo -e " \E[41;1;39m          ? Install SSH / WS ?           \E[0m$NC"
 echo -e "$white\033[0;34m+-----------------------------------------+${NC}"
 sleep 1
-wget -q https://raw.githubusercontent.com/kenDevXD/1/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && ./ssh-vpn.sh
+wget -q https://raw.githubusercontent.com/myvpn1/1/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && ./ssh-vpn.sh
 #install ins-xray
 echo -e "$white\033[0;34m+-----------------------------------------+${NC}"
 echo -e " \E[41;1;39m            ? Install Xray ?             \E[0m$NC"
 echo -e "$white\033[0;34m+-----------------------------------------+${NC}"
 sleep 1 
-wget -q https://raw.githubusercontent.com/kenDevXD/1/main/ins-xray.sh && chmod +x ins-xray.sh && ./ins-xray.sh
+wget -q https://raw.githubusercontent.com/myvpn1/1/main/ins-xray.sh && chmod +x ins-xray.sh && ./ins-xray.sh
 
 # // Download Data
 echo -e "${GREEN}Download Data${NC}"
@@ -419,12 +419,12 @@ wget -q -O /usr/bin/menu-vmess "https://raw.githubusercontent.com/kenDevXD/1/mai
 wget -q -O /usr/bin/menu-ss "https://raw.githubusercontent.com/kenDevXD/1/main/menu-ss.sh"
 wget -q -O /usr/bin/menu-trojan "https://raw.githubusercontent.com/kenDevXD/1/main/menu-trojan.sh"
 #wget -q -O /usr/bin/menu-trgo "https://raw.githubusercontent.com/kenDevXD/1/main/menu-trgo.sh"
-wget -q -O /usr/bin/menu-ssh "https://raw.githubusercontent.com/kenDevXD/1/main/menu-ssh.sh"
+wget -q -O /usr/bin/menu-ssh "https://raw.githubusercontent.com/myvpn1/1/main/menu-ssh.sh"
 #wget -q -O /usr/bin/menu-bckp "https://raw.githubusercontent.com/kenDevXD/1/main/menu-bckp-telegram.sh"
 wget -q -O /usr/bin/menu-bckp "https://raw.githubusercontent.com/kenDevXD/1/main/menu-bckp-github.sh"
 #wget -q -O /usr/bin/bckp "https://raw.githubusercontent.com/kenDevXD/1/main/bckpbot.sh"
-wget -q -O /usr/bin/usernew "https://raw.githubusercontent.com/kenDevXD/1/main/usernew.sh"
-wget -q -O /usr/bin/menu "https://raw.githubusercontent.com/kenDevXD/1/main/menu.sh"
+wget -q -O /usr/bin/usernew "https://raw.githubusercontent.com/myvpn1/1/main/usernew.sh"
+wget -q -O /usr/bin/menu "https://raw.githubusercontent.com/myvpn1/1/main/menu.sh"
 wget -q -O /usr/bin/wbm "https://raw.githubusercontent.com/kenDevXD/1/main/webmin.sh"
 wget -q -O /usr/bin/xp "https://raw.githubusercontent.com/kenDevXD/1/main/xp.sh"
 #wget -q -O /usr/bin/update "https://raw.githubusercontent.com/kenDevXD/1/main/update.sh"
